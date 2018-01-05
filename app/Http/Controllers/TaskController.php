@@ -8,60 +8,35 @@ use Illuminate\Http\Request;
 class TaskController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
+     * Liste des tâches de la plus récente à la plus anciene
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        return Task::latest()->get();
+        return Task::latest()->orderBy('created_at', 'desc')->get();
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Valide la tâche et l'enregistre dans la BD
+     * @return mixed
      */
-    public function create()
+    public function store()
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $this->validate($request, [
+        $this->validate(request(), [
             'body' => 'required|max:500'
         ]);
 
-        return Task::create([ 'body' => request('body') ]);
+        return Task::create(request(['body']));
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Task  $task
-     * @return \Illuminate\Http\Response
+     * Retour les infos d'une tâche
+     * @param Task $task
+     * @return mixed
      */
     public function show(Task $task)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Task  $task
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Task $task)
-    {
-        //
+        return Task::findOrFail($task);
     }
 
     /**
@@ -71,20 +46,23 @@ class TaskController extends Controller
      * @param  \App\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Task $task)
+    public function update(Task $task)
     {
-        //
+        $this->validate(request(), [
+            'body' => 'required|max:500'
+        ]);
+        $task->body = request('body');
+        $task->save();
+        return $task;
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Task  $task
-     * @return \Illuminate\Http\Response
+     * @param Task $task
+     * @return int
+     * @throws \Exception
      */
     public function destroy(Task $task)
     {
-        $task = Task::findOrFail($id);
         $task->delete();
         return 204;
     }

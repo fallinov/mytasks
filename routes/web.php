@@ -12,10 +12,11 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
 //Groupe de route API
+// TODO : déplacer dans fichier api.php et utiliser passport de Laravel pour authentification
 Route::prefix('api')->group(function() {
     /*
     RESTful Resource Controllers : https://laravel.com/docs/5.0/controllers#restful-resource-controllers
@@ -39,5 +40,11 @@ Route::prefix('api')->group(function() {
         |        | GET|HEAD  | api/user              |               | Closure                                     | api,auth:api |
         +--------+-----------+-----------------------+---------------+---------------------------------------------+--------------+
     */
-    Route::resource('tasks', 'TaskController');
+
+    /*
+        Créer toutes les routes standard sauf :
+            - create (affiche form création)
+            - edit (affiche form édition)
+    */
+    Route::resource('tasks', 'TaskController', ['except' => ['create', 'edit']]);
 });
