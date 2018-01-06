@@ -40622,6 +40622,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+//TODO Personaliser les message d'erreur côté serveur
+//TODO Affichage des messages de confirmation et d'erreur à l'utilisateur
+//TODO Tri par drag & drop des tâches (ajout order dans BD)
+//TODO Redisgn avec https://bulma.io/
+//TODO Créer application smartphone
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
@@ -40651,62 +40656,77 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.taskEdit.id = '';
             this.taskEdit.body = '';
         },
-
-
+        logError: function logError(error) {
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+            } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                // http.ClientRequest in node.js
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+            }
+            console.log(error.config);
+        },
         fetchTaskList: function fetchTaskList() {
             var _this = this;
 
             axios.get('api/tasks').then(function (response) {
                 _this.list = response.data;
+            }).catch(function (error) {
+                return _this.logError(error);
             });
         },
-
         createTask: function createTask() {
             var _this2 = this;
 
-            axios.post('api/tasks', this.taskNew).then(function (res) {
+            axios.post('api/tasks', this.taskNew).then(function (response) {
                 _this2.taskNew.body = '';
                 _this2.fetchTaskList();
                 _this2.$refs.taskinput.focus();
-            }).catch(function (err) {
-                return console.error(err);
+            }).catch(function (error) {
+                return _this2.logError(error);
             });
         },
-
         updateTask: function updateTask() {
             var _this3 = this;
 
-            axios.patch('api/tasks/' + this.taskEdit.id, this.taskEdit).then(function (res) {
+            axios.patch('api/tasks/' + this.taskEdit.id, this.taskEdit).then(function (response) {
                 _this3.resetTaskEdit();
                 _this3.fetchTaskList();
-            }).catch(function (err) {
-                return console.error(err);
+            }).catch(function (error) {
+                return _this3.logError(error);
             });
         },
-
         editTask: function editTask(id) {
             var _this4 = this;
 
             axios.get('api/tasks/' + id).then(function (response) {
                 _this4.taskEdit.id = response.data[0].id;
                 _this4.taskEdit.body = response.data[0].body;
-                /*
-                    Après le prochain rafraichissement de Vue.js.
-                    Vue.nextTick() nous permet d'attendre que la direcitve v-if sur l'input soit appliquée afin qu'il existe
-                 */
+                /* Après le prochain rafraichissement de Vue.js.
+                   Vue.nextTick() nous permet d'attendre que la direcitve v-if sur l'input lié à this.taskEdit.id
+                   soit appliquée */
                 Vue.nextTick().then(function () {
                     return document.querySelector('#taskEdit').focus();
                 });
+            }).catch(function (error) {
+                return _this4.logError(error);
             });
         },
-
         deleteTask: function deleteTask(id) {
             var _this5 = this;
 
             axios.delete('api/tasks/' + id).then(function (res) {
                 _this5.fetchTaskList();
-            }).catch(function (err) {
-                return console.error(err);
+            }).catch(function (error) {
+                return _this5.logError(error);
             });
         }
     }
@@ -40878,7 +40898,7 @@ var render = function() {
                       },
                       [
                         _vm._v(
-                          "\n                            annuler\n                        "
+                          "\n                        annuler\n                    "
                         )
                       ]
                     ),

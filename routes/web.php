@@ -17,7 +17,7 @@ Route::get('/', function () {
 
 //Groupe de route API
 // TODO : déplacer dans fichier api.php et utiliser passport de Laravel pour authentification
-Route::prefix('api')->group(function() {
+Route::group(['prefix' => 'api',  'middleware' => ['api','cors',] ], function() {
     /*
     RESTful Resource Controllers : https://laravel.com/docs/5.0/controllers#restful-resource-controllers
     Création automatique des routes de base avec :
