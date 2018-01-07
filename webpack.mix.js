@@ -11,5 +11,6 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/assets/js/app.js', 'public/js')
-   .sass('resources/assets/sass/app.scss', 'public/css');
+//Pour fusionner plusieurs
+mix.js('resources/assets/js/app.js', 'public/js') //js(entrée, sortie)
+    .sass('resources/assets/sass/app.scss', 'public/css');  //sass(entree, sortie)

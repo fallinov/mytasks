@@ -1,22 +1,29 @@
 <template>
     <div>
         <h1>MyTasks</h1>
-        <form action="#" @submit.prevent="createTask()" class="form-inline my-2 my-lg-0">
+        <form action="#" class="form-inline my-2 my-lg-0"
+              @submit.prevent="createTask()"
+              @keydown="errors.clear($event.target.name)">
 
             <div class="form-row">
                 <div class="col-9 input-group">
 
-                    <input v-model="taskNew.body"
+                    <input name="body"
+                           v-model="taskNew.body"
                            ref="taskinput"
+                           :class="{ 'is-invalid': errors.get('body') }"
                            class="form-control"
                            placeholder="Encore du travail ?"
                            aria-label="Search"
                            type="text"
                            autofocus>
+                    <div class="invalid-feedback">
+                        {{ errors.get('body')}}
+                    </div>
                 </div>
 
                 <div class="col-3">
-                    <button class="form-control btn btn-primary" type="submit">
+                    <button class="form-control btn btn-primary" type="submit" :disabled="errors.count() > 0">
                         <span class="oi oi-plus"></span>
                     </button>
                 </div>
@@ -65,12 +72,19 @@
 </template>
 
 <script>
+    //TODO Créer Class Form : https://laracasts.com/series/learn-vue-2-step-by-step/episodes/21
+    //TODO Revoir Errors Class
     //TODO Personaliser les message d'erreur côté serveur
     //TODO Affichage des messages de confirmation et d'erreur à l'utilisateur
     //TODO Tri par drag & drop des tâches (ajout order dans BD)
     //TODO Redisgn avec https://bulma.io/
     //TODO Créer application smartphone
+    //TODO Ajouter un état is-loading au bouton pendant le traitement de la requête AJAX
+
+    import Form from "../core/Form";
+
     export default {
+        form: new Form(),
         data: function () {
             return {
                 list: [],
@@ -81,7 +95,8 @@
                 taskEdit: {
                     id: '',
                     body: ''
-                }
+                },
+                errors: new Errors(),
             };
         },
 
@@ -102,6 +117,7 @@
             },
 
             logError(error) {
+
                 if (error.response) {
                     // The request was made and the server responded with a status code
                     // that falls out of the range of 2xx
@@ -135,7 +151,11 @@
                         this.fetchTaskList();
                         this.$refs.taskinput.focus();
                     })
-                    .catch((error) => this.logError(error) );
+                    .catch((error) => {
+                        //this.logError(error);
+                        this.errors.record(error.response.data.errors);
+                        console.log(this.errors.errors);
+                    });
             },
 
             updateTask () {
