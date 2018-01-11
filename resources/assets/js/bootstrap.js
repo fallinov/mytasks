@@ -9,9 +9,8 @@ window._ = require('lodash');
 
 try {
     window.$ = window.jQuery = require('jquery');
+    require('bootstrap/dist/js/bootstrap.bundle');
 
-    //require('bootstrap/dist/js/bootstrap.bundle.js');
-    //require('bootstrap/dist/js/bootstrap.js');
 } catch (e) {}
 
 /**

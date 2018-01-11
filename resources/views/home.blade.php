@@ -1,28 +1,23 @@
-<!doctype html>
-<html lang="{{ app()->getLocale() }}">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.app')
 
-    <title>MyTask</title>
+@section('content')
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">Dashboard</div>
 
-    <!-- CSRF Stuff -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <script>window.Laravel = { csrfToken: '{{ csrf_token() }}' }</script>
+                <div class="panel-body">
+                    @if (session('status'))
+                        <div class="alert alert-success">
+                            {{ session('status') }}
+                        </div>
+                    @endif
 
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-
-    <!-- Styles -->
-    <link rel="stylesheet" href="/css/app.css">
-</head>
-<body>
-<div class="container" id='app'>
-    <task-list></task-list>
+                    You are logged in!
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-<!-- Scripts -->
-<script src="{{ asset('js/app.js') }}"></script>
-</body>
-</html>
+@endsection

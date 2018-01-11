@@ -82,6 +82,7 @@
     //TODO Ajouter un état is-loading au bouton pendant le traitement de la requête AJAX
 
     import Form from "../core/Form";
+    import Errors from "../core/Errors";
 
     export default {
         form: new Form(),

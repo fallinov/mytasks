@@ -12,12 +12,25 @@
 */
 
 Route::get('/', function () {
-    return view('home');
+    return view('start');
 });
+
+Route::get('/logout', function () {
+
+    auth()->logout();
+
+    return view('start');
+});
+
+
+
+Route::get('/test', function () {
+    return 'bravo';
+})->middleware('auth');
 
 //Groupe de route API
 // TODO : déplacer dans fichier api.php et utiliser passport de Laravel pour authentification
-Route::group(['prefix' => 'api',  'middleware' => ['api','cors',] ], function() {
+Route::group(['prefix' => 'api-test',  'middleware' => ['api','cors',] ], function() {
     /*
     RESTful Resource Controllers : https://laravel.com/docs/5.0/controllers#restful-resource-controllers
     Création automatique des routes de base avec :
@@ -48,3 +61,6 @@ Route::group(['prefix' => 'api',  'middleware' => ['api','cors',] ], function() 
     */
     Route::resource('tasks', 'TaskController', ['except' => ['create', 'edit']]);
 });
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
